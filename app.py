@@ -1,6 +1,18 @@
 import streamlit as st
 import pandas as pd
 
+st.set_page_config(page_title="My APP (MVP)", layout="wide")
+st.warning("This is an MVP(test version). Features may change, as well as bugs may also exist.")
+st.title ("My Dashboard Beta Version")
+st.markdown("""This is an early prototype which is built for testing and to get feedback.""")
+
+st.sidebar.info("MVP version the production is not ready yet")
+st.text ("Feel free to share your thought. What do you think?")
+st.button("submit")
+
+
+st.text(" Get the clarity of your income and expenses")
+
 # Title
 st.title('Financial Freelancers Dashboard')
 

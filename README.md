@@ -9,4 +9,4 @@ Limitation
 .it may bug
 .Data may not be final
 
-Open to feed baCK
+Open for feedbacK

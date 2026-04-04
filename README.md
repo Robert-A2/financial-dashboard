@@ -7,6 +7,6 @@ features:
 Limitation
 .Production not ready yet
 .it may bug
-.Data may not be final
+.Data may not be final.
 
-Open for feedbacK
+Open for feedback.

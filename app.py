@@ -7,14 +7,17 @@ st.title ("My Dashboard Beta Version")
 st.markdown("""This is an early prototype which is built for testing and to get feedback.""")
 
 st.sidebar.info("MVP version the production is not ready yet")
-st.text ("Feel free to share your thought. What do you think?")
-st.button("submit")
+st.text ("Feel free to share your thought.")
 
-
-st.text(" Get the clarity of your income and expenses")
+st.subheader("Upload Your Financial Data")
+st.markdown("""
+***Required CSV Format:*** 
+income,expense
+  500,200
+  400,200""")
 
 # Title
-st.title('Financial Freelancers Dashboard')
+st.title('Freelancers Dashboard')
 
 # Uploade a file
 uploaded_file = st.file_uploader("Upload your CSV", type=["csv"])
@@ -40,12 +43,14 @@ def analyze_financial_stability(income, expenses):
 
 # Function the uploaded file
 if uploaded_file is not None:
+ try:
         df_user = pd.read_csv(uploaded_file)
 
         # Validate the neccessary columns
         look_for_cols = {"income", "expense"}
         if not look_for_cols.issubset(df_user.columns):
             st.error("CSV needs to contain 'income' and 'expenses' columns.")
+
         else:
             # Do the Calculations
             money_in = df_user["income"].sum()
@@ -63,20 +68,25 @@ if uploaded_file is not None:
 
             # Show metrics
             col1, col2, col3 = st.columns(3)
-            col1.metric("Income", f"{money_in:.1f}")
-            col2.metric("Expense", f"{money_out:.1f}")
-            col3.metric("Profit", f"{net_income:.1f}")
+            col1.metric("Income", f"£{money_in:.2f}")
+            col2.metric("Expense", f"£{money_out:.2f}")
+            col3.metric("Profit", f"£{net_income:.2f}")
 
             st.write(f"Savings Rate: {round(savings_rate * 100, 2)}%")
             st.write(f"Expense Ratio: {round(expense_ratio * 100, 2)}%")
 
-            # Show the Line chart
-            st.subheader("Your Financial Insight")
-            st.line_chart({
-                "Income": [money_in],
-                "Expense": [money_out],
-                "Profit": [net_income ]
-            })
-
+ except Exception as e:
+  st.error(f"Error processing file:{e}")
 else:
-    st.info("Welcome please upload a CSV file to get started.")
+    st.info("Please update a CSV file to get started.")
+
+# Process feedback
+    st.subheader("Share Your Feedback")
+    feedback = st.text_area("What can be improved? What did you like?")
+
+    if st.button("Submit Feedback"):
+        if feedback.strip():
+            st.success(" Thank You very much for your feedback!")
+            # Future: connect to database /Google Sheets
+        else:
+            ("Please enter some feedback before sumbmitting.")

@@ -21,7 +21,7 @@ st.text("Feel free to share your thoughts.")
   # Mode selector 
 mode = st.radio(
     "Selsect how you want to start:",
-    ["⚡ Try Demo (Instant)", "📂 Upload CSV", "✍️ Manual Input"]
+    ["⚡ Try Demo (Instant)", "Upload CSV", " Manual Input"]
 )
 
      # Analyse financial stability
@@ -96,7 +96,7 @@ def display_results(income, df_expense):
         st.success("Saved.")
 
      # display the demonstration
-if mode == "⚡ Try Demo (Instant)":
+if mode == " Try Demo (Instant)":
     st.subheader("Instant Demo")
 
     demo_data = pd.DataFrame({

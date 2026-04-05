@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import datetime
 
-# ---------- Config ----------
+# ----- Get The Config -----
 st.set_page_config(page_title="My APP (MVP)", layout="wide")
 if "history" not in st.session_state: st.session_state.history = []
 
@@ -12,23 +12,23 @@ st.subheader("Know in 30 seconds if you're actually making money (not just earni
 st.sidebar.info("MVP version production is not ready yet")
 st.text("Feel free to share your thoughts.")
 
-# ---------- Mode ----------
-mode = st.radio("Select how you want to start:",
+# ----- Put Mode Example-----
+mode = st.radio("Select how you want to start it:",
                 ["⚡ Try Demo (Instant)", "📂 Upload CSV", "✍️ Manual Input"])
 
-# ---------- Core Function ----------
-def display_results(income, df):
+# -----Core Bacis Function -----
+def get_results(income, df):
     total = df["amount"].sum()
     net = income - total
     savings_ratio = (net / income * 100) if income > 0 else 0
     expense_ratio = (total / income * 100) if income > 0 else 0
 
     st.subheader("Financial Stability")
-    status = "No income data." if income==0 else \
-             "⚠️ Losing money!" if net<0 else \
-             "⚠️ Low savings." if savings_ratio<10 else \
-             "🙂 Decent savings." if savings_ratio<30 else \
-             "✅ Strong savings."
+    status = "No income data found." if income==0 else \
+             "⚠️ You have to be careful because you are losing money!" if net<0 else \
+             "⚠️You have a Low savings." if savings_ratio<10 else \
+             "You have a decent savings." if savings_ratio<30 else \
+             "✅ Your are doing good on your savings."
     st.success(status)
 
     # Metrics
@@ -37,9 +37,9 @@ def display_results(income, df):
     c2.metric("Expenses", f"£{total:.2f}")
     c3.metric("Left Over", f"£{net:.2f}")
 
-    r1,r2 = st.columns(2)
-    r1.metric("Savings Ratio", f"{savings_ratio:.1f}%")
-    r2.metric("Expense Ratio", f"{expense_ratio:.1f}%")
+    ratio1,ratio2 = st.columns(2)
+    ratio1.metric("Savings Ratio", f"{savings_ratio:.1f}%")
+    ratio2.metric("Expense Ratio", f"{expense_ratio:.1f}%")
 
     # Category Breakdown
     st.subheader("Spending Breakdown")
@@ -52,13 +52,13 @@ def display_results(income, df):
         st.session_state.history.append({"date": datetime.date.today(), "income": income, "expense": total})
         st.success("Saved.")
 
-# ---------- Demo ----------
-if mode=="⚡ Try Demo (Instant)":
+# ----- Display Demo -----
+if mode =="⚡ Try Demo (Instantly)":
     df = pd.DataFrame({"category":["Rent","Food","Transport"],"amount":[500,200,150]})
     st.dataframe(df)
-    display_results(1200, df)
+    get_results(1200, df)
 
-# ---------- Upload CSV ----------
+# ----- Function to Upload CSV -----
 elif mode=="📂 Upload CSV":
     st.caption("CSV: income, category, amount")
     file = st.file_uploader("Upload CSV", type=["csv"])
@@ -67,10 +67,10 @@ elif mode=="📂 Upload CSV":
             df = pd.read_csv(file, sep=None, engine="python")
             income = df["income"].iloc[0] if "income" in df.columns else st.number_input("Enter income (£)",0.0)
             if income>0 and "category" in df.columns and "amount" in df.columns:
-                display_results(income, df)
-            else: st.error("CSV must have 'category' and 'amount'.")
+                get_results(income, df)
+            else: st.error("CSV must contain'category' and 'amount'.")
         except Exception as e: st.error(f"Error: {e}")
-    else: st.info("Upload a CSV file to analyze your finances.")
+    else: st.info("Upload a CSV file to analyze your income ane expenses.")
 
 # ---------- Manual Input (Dynamic) ----------
 elif mode=="✍️ Manual Input":
@@ -92,7 +92,7 @@ elif mode=="✍️ Manual Input":
     if st.button("Analyze"):
         if expense_data:
             df_expense = pd.DataFrame(expense_data)
-            display_results(income, df_expense)
+            get_results(income, df_expense)
         else:
             st.warning("Please enter at least one expense.")
 
@@ -111,4 +111,4 @@ st.subheader("Share Your Feedback")
 fb = st.text_area("What can be improved? Would you use this weekly?")
 if st.button("Submit Feedback"):
     if fb.strip(): st.success("Thank you for your feedback!")
-    else: st.warning("Please enter feedback.")
+    else: st.warning("Please enter some feedback.")

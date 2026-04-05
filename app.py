@@ -141,7 +141,7 @@ elif mode == "Upload CSV":
         st.info("Upload a CSV file to analyze your finances.")
 
      # Get the manual input 
-elif mode == "✍️ Manual Input":
+elif mode == " Manual Input":
     st.subheader("Enter Your Data Here")
 
     income = st.number_input("Income (£)", min_value=0.0)

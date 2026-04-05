@@ -180,7 +180,8 @@ st.subheader("Share Your Feedback")
 feedback = st.text_area("What can be improved? Would you use this weekly?")
 
 if st.button("Submit Feedback"):
-    if feedback.strip():
-        st.success("Thank you very much for your feedback!")
-    else:
-        st.warning("Please enter some feedback before submitting.")
+        if feedback.strip():
+            st.success(" Thank You very much for your feedback!")
+            # Future: connect to database /Google Sheets
+        else:
+            ("Please enter some feedback before sumbmitting.")

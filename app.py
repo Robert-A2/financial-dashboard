@@ -41,9 +41,11 @@ def display_results(income, df):
     r1.metric("Savings Ratio", f"{savings_ratio:.1f}%")
     r2.metric("Expense Ratio", f"{expense_ratio:.1f}%")
 
+    # Category Breakdown
     st.subheader("Spending Breakdown")
-    st.bar_chart(df.groupby("category")["amount"].sum())
-    top = df.groupby("category")["amount"].sum().idxmax() if not df.empty else None
+    cat_summary = df.groupby("category")["amount"].sum()
+    st.bar_chart(cat_summary)
+    top = cat_summary.idxmax() if not df.empty else None
     if top: st.info(f"Top spending: {top}")
 
     if st.button("Save Result"):
@@ -70,22 +72,43 @@ elif mode=="📂 Upload CSV":
         except Exception as e: st.error(f"Error: {e}")
     else: st.info("Upload a CSV file to analyze your finances.")
 
-# ---------- Manual Input ----------
+# ---------- Manual Input (Dynamic) ----------
 elif mode=="✍️ Manual Input":
+    st.subheader("Enter Your Data Here")
     income = st.number_input("Income (£)",0.0)
-    expense_data = [{"category":c,"amount":st.number_input(c+" (£)",0.0,key=c)} for c in ["Rent","Food","Transport","Fun","Other"] if st.session_state.get(c,0)>0]
+
+    st.subheader("Expenses by Category")
+    # Dynamic categories
+    if "manual_categories" not in st.session_state: st.session_state.manual_categories = ["Rent","Food","Transport"]
+    new_cat = st.text_input("Add new category", key="new_cat")
+    if st.button("Add Category") and new_cat.strip():
+        st.session_state.manual_categories.append(new_cat.strip())
+
+    expense_data = []
+    for cat in st.session_state.manual_categories:
+        amt = st.number_input(f"{cat} (£)",0.0,key=cat)
+        if amt>0: expense_data.append({"category":cat,"amount":amt})
+
     if st.button("Analyze"):
-        if expense_data: display_results(income,pd.DataFrame(expense_data))
-        else: st.warning("Please enter at least one expense.")
+        if expense_data:
+            df_expense = pd.DataFrame(expense_data)
+            display_results(income, df_expense)
+        else:
+            st.warning("Please enter at least one expense.")
 
 # ---------- History ----------
 st.divider()
 st.subheader("Below Is Your Progress")
-if st.session_state.history: st.line_chart(pd.DataFrame(st.session_state.history).set_index("date")[["income","expense"]])
-else: st.info("No saved data yet.")
+if st.session_state.history:
+    df_hist = pd.DataFrame(st.session_state.history)
+    st.line_chart(df_hist.set_index("date")[["income","expense"]])
+else:
+    st.info("No saved data yet.")
 
 # ---------- Feedback ----------
 st.divider()
 st.subheader("Share Your Feedback")
 fb = st.text_area("What can be improved? Would you use this weekly?")
-if st.button("Submit Feedback"): st.success("Thank you for your feedback!") if fb.strip() else st.warning("Please enter feedback.")
+if st.button("Submit Feedback"):
+    if fb.strip(): st.success("Thank you for your feedback!")
+    else: st.warning("Please enter feedback.")

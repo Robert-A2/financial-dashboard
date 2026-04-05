@@ -31,7 +31,7 @@ def get_results(income, df):
              "✅ Your are doing good on your savings."
     st.success(status)
 
-    # Metrics
+# ----- Display Metrics -----
     c1,c2,c3 = st.columns(3)
     c1.metric("Income", f"£{income:.2f}")
     c2.metric("Expenses", f"£{total:.2f}")
@@ -78,7 +78,7 @@ elif mode=="✍️ Manual Input":
     income = st.number_input("Income (£)",0.0)
 
     st.subheader("Expenses by Category")
-    # Dynamic categories
+# -----Dynamic categories-----
     if "manual_categories" not in st.session_state: st.session_state.manual_categories = ["Rent","Food","Transport"]
     new_cat = st.text_input("Add new category", key="new_cat")
     if st.button("Add Category") and new_cat.strip():
@@ -96,7 +96,7 @@ elif mode=="✍️ Manual Input":
         else:
             st.warning("Please enter at least one expense.")
 
-# ---------- History ----------
+# ----- Result History -----
 st.divider()
 st.subheader("Below Is Your Progress")
 if st.session_state.history:
@@ -105,7 +105,7 @@ if st.session_state.history:
 else:
     st.info("No saved data yet.")
 
-# ---------- Feedback ----------
+# ----- Run Feedback -----
 st.divider()
 st.subheader("Share Your Feedback")
 fb = st.text_area("What can be improved? Would you use this weekly?")

@@ -33,6 +33,7 @@ def get_results(income, df):
              "⚠️ You have to be careful because you are losing money!" if net<0 else \
              "⚠️You have a Low savings." if savings_ratio<10 else \
              "You have a decent savings." if savings_ratio<30 else \
+             "Reduce expenses." if expense_ratio<30 else \
              "✅ Your are doing good on your savings But reduce expenses."
     st.success(status)
 

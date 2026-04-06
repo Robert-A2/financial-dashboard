@@ -46,7 +46,7 @@ def get_results(income, df):
     ratio1.metric("Savings Ratio", f"{savings_ratio:.1f}%")
     ratio2.metric("Expense Ratio", f"{expense_ratio:.1f}%")
 
-    # -----Category Breakdown-----
+    # ----- Breakdown the category -----
     st.subheader("Spending Breakdown")
     cat_summary = df.groupby("category")["amount"].sum()
     st.bar_chart(cat_summary)

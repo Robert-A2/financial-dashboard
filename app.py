@@ -12,6 +12,19 @@ st.subheader("Know in 30 seconds if you're actually making money (not just earni
 st.sidebar.info("MVP version production is not ready yet")
 st.text("Feel free to share your thoughts.")
 
+# ----- Currency Selector -----
+currency = st.sidebar.selectbox(
+    "Select Currency",
+    ["GBP (£)", "EUR (€)", "USD ($)", "GHS (₵)"]
+)
+
+currency_symbol = (
+    "£" if "GBP" in currency else
+    "€" if "EUR" in currency else
+    "$" if "USD" in currency else
+    "₵"
+)
+
 # ----- Put Mode Example-----
 mode = st.radio("Select how you want to start it:",
                 ["⚡ Try Demo (Instant)", "📂 Upload CSV", "✍️ Manual Input"])
@@ -36,12 +49,13 @@ def get_results(income, df):
              "⚠️Reduce some expenses." if expense_ratio>30 else \
              "✅ Your are doing good on your savings But reduce expenses."
     st.success(status)
+    
 
 # ----- Display Metrics -----
     c1,c2,c3 = st.columns(3)
-    c1.metric("Income", f"£{income:.2f}")
-    c2.metric("Expenses", f"£{total:.2f}")
-    c3.metric("Left Over", f"£{net:.2f}")
+    c1.metric("Income", f"{currency_symbol}{income:.2f}")
+    c2.metric("Expenses", f"{currency_symbol}{total:.2f}")
+    c3.metric("Left Over", f"{currency_symbol}{net:.2f}")
 
     ratio1,ratio2 = st.columns(2)
     ratio1.metric("Savings Ratio", f"{savings_ratio:.1f}%")
@@ -74,7 +88,7 @@ elif mode=="📂 Upload CSV":
     if file:
         try:
             df = pd.read_csv(file, sep=None, engine="python")
-            income = df["income"].iloc[0] if "income" in df.columns else st.number_input("Enter income (£)",0.0)
+            income = df["income"].iloc[0] if "income" in df.columns else st.number_input(f"Enter income ({currency_symbol})",0.0)
             if income>0 and "category" in df.columns and "amount" in df.columns:
                 get_results(income, df)
             else: st.error("CSV must contain'category' and 'amount'.")
@@ -84,7 +98,7 @@ elif mode=="📂 Upload CSV":
 # -----Get the Manual Input-----
 elif mode=="✍️ Manual Input":
     st.subheader("Enter Your Data Here")
-    income = st.number_input("Income (£)",0.0)
+    income = st.number_input(f"Income ({currency_symbol})",0.0)
 
     st.subheader("Expenses by Category")
     
@@ -96,7 +110,7 @@ elif mode=="✍️ Manual Input":
 
     expense_data = []
     for cat in st.session_state.manual_categories:
-        amt = st.number_input(f"{cat} (£)",0.0,key=cat)
+        amt = st.number_input(f"{cat} ({currency_symbol})",0.0,key=cat)
         if amt>0: expense_data.append({"category":cat,"amount":amt})
 
     if st.button("Analyze"):

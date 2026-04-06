@@ -26,11 +26,11 @@ def get_results(income, df):
     total = df["amount"].sum()
     net = income - total
     savings_ratio = (net / income * 100) if income > 0 else 0
-    expense_ratio = (total / income * 100) if income > 0 else 0
+    expense_ratio = (total / income * 100) if income > 0 else 0   
 
     st.subheader("Financial Stability")
     status = "No income data found." if income==0 else \
-             "⚠️ You have to be careful because you are losing money!" if net<0 else \
+             "⚠️ You have to be careful because you are losing money! Reduce some expenses" if net<0 else \
              "⚠️You have a Low savings." if savings_ratio<10 else \
              "You have a decent savings." if savings_ratio<30 else \
              "Reduce expenses." if expense_ratio>30 else \

@@ -79,7 +79,7 @@ elif mode=="📂 Upload CSV":
                 get_results(income, df)
             else: st.error("CSV must contain'category' and 'amount'.")
         except Exception as e: st.error(f"Error: {e}")
-    else: st.info("Upload a CSV file to analyze your income ane expenses.")
+    else: st.info("Upload a CSV file to analyze your income and expenses.")
 
 # -----Get the Manual Input-----
 elif mode=="✍️ Manual Input":

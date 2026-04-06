@@ -16,7 +16,12 @@ st.text("Feel free to share your thoughts.")
 mode = st.radio("Select how you want to start it:",
                 ["⚡ Try Demo (Instant)", "📂 Upload CSV", "✍️ Manual Input"])
 
-# -----Core Bacis Function -----
+if mode == "⚡ Try Demo (Instant)":
+    mode = "⚡ Try Demo (Instantly)"
+
+st.write("Current mode:", mode)
+
+# ----- Core Bacis Function -----
 def get_results(income, df):
     total = df["amount"].sum()
     net = income - total
@@ -41,10 +46,13 @@ def get_results(income, df):
     ratio1.metric("Savings Ratio", f"{savings_ratio:.1f}%")
     ratio2.metric("Expense Ratio", f"{expense_ratio:.1f}%")
 
-    # Category Breakdown
+    # -----Category Breakdown-----
     st.subheader("Spending Breakdown")
     cat_summary = df.groupby("category")["amount"].sum()
     st.bar_chart(cat_summary)
+
+    st.write("Breakdown Table:", cat_summary)
+
     top = cat_summary.idxmax() if not df.empty else None
     if top: st.info(f"Top spending: {top}")
 
@@ -72,13 +80,14 @@ elif mode=="📂 Upload CSV":
         except Exception as e: st.error(f"Error: {e}")
     else: st.info("Upload a CSV file to analyze your income ane expenses.")
 
-# ---------- Manual Input (Dynamic) ----------
+# -----Get the Manual Input-----
 elif mode=="✍️ Manual Input":
     st.subheader("Enter Your Data Here")
     income = st.number_input("Income (£)",0.0)
 
     st.subheader("Expenses by Category")
-# -----Dynamic categories-----
+    
+# -----categories -----
     if "manual_categories" not in st.session_state: st.session_state.manual_categories = ["Rent","Food","Transport"]
     new_cat = st.text_input("Add new category", key="new_cat")
     if st.button("Add Category") and new_cat.strip():

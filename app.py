@@ -33,7 +33,7 @@ currency_symbol = (
     "₵"
 )
 
-# ----- GOAL -----
+# ----- GET USERS GOAL -----
 goal = st.number_input(
     f"💰 What is your monthly income goal? ({currency_symbol})",
     min_value=0.0,
@@ -46,13 +46,13 @@ mode = st.radio(
     ["⚡ Try Demo", "📂 Upload CSV", "✍️ Manual Input"]
 )
 
-# ----- CORE FUNCTION -----
+# ----- THIS IS THE CORE FUNCTION -----
 def get_results(income, df, goal):
     if df.empty:
         st.warning("No expense data provided.")
         return
 
-    # Ensure correct types
+    # -----ENSURE THE CORRECT TYPE-----
     df["amount"] = pd.to_numeric(df["amount"], errors="coerce").fillna(0)
 
     total = df["amount"].sum()
@@ -63,7 +63,7 @@ def get_results(income, df, goal):
 
     st.subheader("💡 Your Financial Reality")
 
-    # ---- RISK ----
+    # ----- GET RISK -----
     if income == 0:
         risk = "danger"
         msg = "🚨 No income. You are in survival mode."
@@ -105,7 +105,7 @@ def get_results(income, df, goal):
     else:
         st.info("No expenses recorded.")
 
-    # ---- GOAL GAP ----
+    # ---- USERS GOAL GAP ----
     gap = goal - income
     if goal > 0:
         if gap > 0:
@@ -113,7 +113,7 @@ def get_results(income, df, goal):
         else:
             st.success("You reached your income goal.")
 
-    # ---- ACTION ----
+    # ---- DISPLAY THE NECCESSARY ACTION ----
     st.subheader("🎯 What You Should Do Next")
 
     if risk == "danger":
@@ -127,7 +127,7 @@ def get_results(income, df, goal):
         st.write("- Maintain your current strategy")
         st.write("- Consider saving or reinvesting")
 
-    # ---- BREAKDOWN ----
+    # ---- BREAKDOWN FUNCTION ----
     st.subheader("📊 Spending Breakdown")
     cat_summary = df.groupby("category")["amount"].sum()
     st.bar_chart(cat_summary)
@@ -136,7 +136,7 @@ def get_results(income, df, goal):
         top = cat_summary.idxmax()
         st.info(f"Top Spending Category: {top}")
 
-    # ---- SAVE ----
+    # ---- SAVE DATETIME ----
     if st.button("Save Result"):
         st.session_state.history.append({
             "date": datetime.date.today(),
@@ -154,7 +154,7 @@ if mode == "⚡ Try Demo":
     st.dataframe(df)
     get_results(1200, df, goal)
 
-# ----- CSV -----
+# ----- UPLOAD CSV FILE -----
 elif mode == "📂 Upload CSV":
     st.caption("CSV must contain: category, amount (optional: income column)")
 
@@ -180,7 +180,7 @@ elif mode == "📂 Upload CSV":
     else:
         st.info("Upload a CSV file to begin.")
 
-# ----- MANUAL -----
+# ----- THE MANUAL INPUT -----
 elif mode == "✍️ Manual Input":
     st.subheader("Enter Your Data")
 
@@ -207,7 +207,7 @@ elif mode == "✍️ Manual Input":
         else:
             st.warning("Please enter at least one expense.")
 
-# ----- HISTORY -----
+# ----- DATA HISTORY -----
 st.divider()
 st.subheader("📈 Your Progress")
 
@@ -223,7 +223,7 @@ st.subheader("💬 Give Feedback")
 
 st.write("Help improve this tool in 30 seconds:")
 
-form_url = "PASTE_YOUR_GOOGLE_FORM_LINK_HERE"
+form_url = "https://forms.gle/t1FxhUtm7pvXBaZQ8"
 
 st.markdown(f"[👉 Click here to give feedback]({form_url})")
 st.info("The form opens in a new tab. Please come back after submitting 🙏")

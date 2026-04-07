@@ -33,7 +33,7 @@ currency_symbol = (
     "₵"
 )
 
-# ----- GET USERS GOAL -----
+# ----- GET USER GOAL -----
 goal = st.number_input(
     f"💰 What is your monthly income goal? ({currency_symbol})",
     min_value=0.0,
@@ -42,7 +42,7 @@ goal = st.number_input(
 
 # ----- MODE -----
 mode = st.radio(
-    "BELOW SELECT A BUTTON TO SATART"
+    "choos here to start?",
     ["⚡ Try Demo", "📂 Upload CSV", "✍️ Manual Input"]
 )
 

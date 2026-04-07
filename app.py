@@ -42,7 +42,7 @@ goal = st.number_input(
 
 # ----- MODE -----
 mode = st.radio(
-    "choos here to start?",
+    "select a button here to start?",
     ["⚡ Try Demo", "📂 Upload CSV", "✍️ Manual Input"]
 )
 

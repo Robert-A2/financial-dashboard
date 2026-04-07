@@ -42,7 +42,7 @@ goal = st.number_input(
 
 # ----- MODE -----
 mode = st.radio(
-    "BELOW SELECT A BUTTON TO SATART?",
+    "BELOW SELECT A BUTTON TO SATART"
     ["⚡ Try Demo", "📂 Upload CSV", "✍️ Manual Input"]
 )
 

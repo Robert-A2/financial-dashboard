@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 import datetime
-from PIL import Image
+
 # ----- CONFIG -----
 st.set_page_config(page_title="Freelancer Survival Dashboard", layout="wide")
 
@@ -15,10 +15,6 @@ if "manual_categories" not in st.session_state:
 
 # ----- HEADER -----
 st.warning("This is an MVP (test version). Results are indicative, not financial advice.")
-
-image=Image.open('jpeg2.jpg')
-st.image(image,width=600)
-
 st.title("🚀 Freelancer Survival Dashboard")
 st.subheader("Know in 30 seconds if you're financially safe or at risk.")
 

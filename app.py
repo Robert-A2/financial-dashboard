@@ -16,6 +16,9 @@ if "manual_categories" not in st.session_state:
 # ----- HEADER -----
 st.warning("This is an MVP (test version). Results are indicative, not financial advice.")
 st.title("🚀 Freelancer Survival Dashboard")
+st.write('''### Current month''')
+this_month = datetime.now().month
+st.subheader(this_month)
 st.subheader("Know in 30 seconds if you're financially safe or at risk.")
 
 st.sidebar.info("MVP version - built for testing real freelancer pain points")

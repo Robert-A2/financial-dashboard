@@ -1,229 +1,105 @@
-
 import streamlit as st
 import pandas as pd
-import datetime
 
-# ----- CONFIG -----
-st.set_page_config(page_title="Freelancer Survival Dashboard", layout="wide")
+st.set_page_config(page_title="Freelancer Survival Tool", layout="centered")
 
-# ----- SESSION STATE -----
-if "history" not in st.session_state:
-    st.session_state.history = []
+st.title("💸 Freelancer Survival Tool")
 
-if "manual_categories" not in st.session_state:
-    st.session_state.manual_categories = ["Rent", "Food", "Transport"]
+st.markdown("Understand your financial situation in seconds.")
 
-# ----- HEADER -----
-st.warning("This is an MVP (test version). Results are indicative, not financial advice.")
-st.title("🚀 Freelancer Survival Dashboard")
-st.subheader("Know in 30 seconds if you're financially safe or at risk.")
+# ----- INPUTS -----
+st.subheader("📥 Your Data")
 
-st.sidebar.info("MVP version - built for testing real freelancer pain points")
+income = st.number_input("💰 Monthly Income (€)", min_value=0.0)
+savings = st.number_input("🏦 Current Savings (€)", min_value=0.0)
 
-# ----- CURRENCY -----
-currency = st.sidebar.selectbox(
-    "Select Currency",
-    ["EUR (€)", "USD ($)", "GBP (£)", "GHS (₵)"]
-)
+st.markdown("### 💸 Expenses")
 
-currency_symbol = (
-    "€" if "EUR" in currency else
-    "$" if "USD" in currency else
-    "£" if "GBP" in currency else
-    "₵"
-)
+expense_data = []
 
-# ----- GET USER GOAL -----
-goal = st.number_input(
-    f"💰 What is your monthly income goal? ({currency_symbol})",
-    min_value=0.0,
-    value=0.0
-)
+num_expenses = st.number_input("Number of expense items", min_value=1, step=1)
 
-# ----- MODE -----
-mode = st.radio(
-    "Select a button here to start!", 
-    ["⚡ Try Demo", "📂 Upload CSV", "✍️ Manual Input"]
-)
+for i in range(int(num_expenses)):
+    col1, col2 = st.columns(2)
+    with col1:
+        name = st.text_input(f"Expense {i+1} name", key=f"name_{i}")
+    with col2:
+        amount = st.number_input(f"€", min_value=0.0, key=f"amount_{i}")
 
-# ----- THIS IS THE CORE FUNCTION -----
-def get_results(income, df, goal):
-    if df.empty:
-        st.warning("No expense data provided.")
-        return
+if amount > 0:
+    expense_data.append({"name": name, "amount": amount})
 
-    # -----ENSURE THE CORRECT TYPE-----
-    df["amount"] = pd.to_numeric(df["amount"], errors="coerce").fillna(0)
+# ----- CALCULATION -----
+if st.button("Analyze my situation"):
 
-    total = df["amount"].sum()
-    net = income - total
+   if not expense_data:
+       st.warning("Please enter at least one expense.")
+       st.stop()
 
-    savings_ratio = (net / income * 100) if income > 0 else 0
-    expense_ratio = (total / income * 100) if income > 0 else 0
+   df_expense = pd.DataFrame(expense_data)
+   total_expense = df_expense["amount"].sum()
+   monthly_balance = income - total_expense
 
-    st.subheader("💡 Your Financial Reality")
+   st.divider()
+   st.subheader("📊 Your Situation")
 
-    # ----- GET RISK -----
-    if income == 0:
-        risk = "danger"
-        msg = "🚨 No income. You are in survival mode."
-    elif net < 0:
-        risk = "danger"
-        msg = "🚨 You are losing money. This is not sustainable."
-    elif income < goal:
-        risk = "warning"
-        msg = "⚠️ You are below your income target."
-    elif savings_ratio < 20:
-        risk = "warning"
-        msg = "⚠️ Your safety margin is low."
-    else:
-        risk = "safe"
-        msg = "✅ You are financially stable."
-
-    if risk == "danger":
-        st.error(msg)
-    elif risk == "warning":
-        st.warning(msg)
-    else:
-        st.success(msg)
-
-    # ---- METRICS ----
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Income", f"{currency_symbol}{income:.2f}")
-    c2.metric("Expenses", f"{currency_symbol}{total:.2f}")
-    c3.metric("Left Over", f"{currency_symbol}{net:.2f}")
-
-    r1, r2 = st.columns(2)
-    r1.metric("Savings Ratio", f"{savings_ratio:.1f}%")
-    r2.metric("Expense Ratio", f"{expense_ratio:.1f}%")
-
-    # ---- RUNWAY ----
-    st.subheader("🧠 Survival Runway")
-    if total > 0:
-        runway = income / total
-        st.info(f"You can survive {runway:.1f} months at this spending level.")
-    else:
-        st.info("No expenses recorded.")
-
-    # ---- USERS GOAL GAP ----
-    gap = goal - income
-    if goal > 0:
-        if gap > 0:
-            st.warning(f"You need {currency_symbol}{gap:.2f} more to reach your goal.")
-        else:
-            st.success("You reached your income goal.")
-
-    # ---- DISPLAY THE NECCESSARY ACTION ----
-    st.subheader("🎯 What You Should Do Next")
-
-    if risk == "danger":
-        st.write("- Cut unnecessary expenses immediately")
-        st.write("- Find at least 1 paying client this week")
-        st.write("- Avoid unpaid work")
-    elif risk == "warning":
-        st.write("- Increase income or reduce top expenses")
-        st.write("- Review your pricing or workload")
-    else:
-        st.write("- Maintain your current strategy")
-        st.write("- Consider saving or reinvesting")
-
-    # ---- BREAKDOWN FUNCTION ----
-    st.subheader("📊 Spending Breakdown")
-    cat_summary = df.groupby("category")["amount"].sum()
-    st.bar_chart(cat_summary)
-
-    if not cat_summary.empty:
-        top = cat_summary.idxmax()
-        st.info(f"Top Spending Category: {top}")
-
-    # ---- SAVE DATETIME ----
-    if st.button("Save Result"):
-        st.session_state.history.append({
-            "date": datetime.date.today(),
-            "income": income,
-            "expense": total
-        })
-        st.success("Saved.")
-
-# ----- DEMO -----
-if mode == "⚡ Try Demo":
-    df = pd.DataFrame({
-        "category": ["Rent", "Food", "Transport"],
-        "amount": [500, 200, 150]
-    })
-    st.dataframe(df)
-    get_results(1200, df, goal)
-
-# ----- UPLOAD CSV FILE -----
-elif mode == "📂 Upload CSV":
-    st.caption("CSV must contain: category, amount (optional: income column)")
-
-    file = st.file_uploader("Upload CSV", type=["csv"])
-
-    if file:
-        try:
-            df = pd.read_csv(file)
-
-            if "category" not in df.columns or "amount" not in df.columns:
-                st.error("CSV must contain 'category' and 'amount'")
-            else:
-                if "income" in df.columns:
-                    income = float(df["income"].iloc[0])
-                else:
-                    income = st.number_input(f"Enter income ({currency_symbol})", 0.0)
-
-                if income >= 0:
-                    get_results(income, df, goal)
-
-        except Exception as e:
-            st.error(f"Error reading file: {e}")
-    else:
-        st.info("Upload a CSV file to begin.")
-
-# ----- THE MANUAL INPUT -----
-elif mode == "✍️ Manual Input":
-    st.subheader("Enter Your Data")
-
-    income = st.number_input(f"Income ({currency_symbol})", 0.0)
-
-    st.subheader("Expenses by Category")
-
-    new_cat = st.text_input("Add new category")
-
-    if st.button("Add Category") and new_cat.strip():
-        st.session_state.manual_categories.append(new_cat.strip())
-
-    expense_data = []
-
-    for cat in st.session_state.manual_categories:
-        amt = st.number_input(f"{cat} ({currency_symbol})", 0.0, key=cat)
-        if amt > 0:
-            expense_data.append({"category": cat, "amount": amt})
-
-    if st.button("Analyze"):
-        if expense_data:
-            df_expense = pd.DataFrame(expense_data)
-            get_results(income, df_expense, goal)
-        else:
-            st.warning("Please enter at least one expense.")
-
-# ----- DATA HISTORY -----
-st.divider()
-st.subheader("📈 Your Progress")
-
-if st.session_state.history:
-    df_hist = pd.DataFrame(st.session_state.history)
-    st.line_chart(df_hist.set_index("date")[["income", "expense"]])
+# ----- SAFE TO SPEND -----
+if monthly_balance >= 0:
+    st.success(f"🟢 You are stable. You can save about €{monthly_balance:.0f}/month.")
 else:
-    st.info("No saved data yet.")
+    st.error(f"🔴 You are losing €{abs(monthly_balance):.0f}/month.")
 
-# ----- FEEDBACK LINK -----
+# ----- SURVIVAL -----
+if monthly_balance < 0:
+    if savings > 0:
+        months_survival = savings / abs(monthly_balance)
+        st.error(f"⏳ You will run out of money in {months_survival:.1f} months.")
+    else:
+        st.error("🚨 You have no savings and are losing money. Immediate action needed.")
+else:
+    st.success("🟢 You are not at immediate risk.")
+
+# ----- DECISION ENGINE -----
 st.divider()
-st.subheader("💬 Give Feedback")
+st.subheader("🚀 What to do now")
 
-st.write("Help improve this tool in 30 seconds:")
+if monthly_balance < 0:
+    needed_income = abs(monthly_balance)
+    weekly_gap = needed_income / 4
 
-form_url = "https://forms.gle/t1FxhUtm7pvXBaZQ8"
+    st.markdown(f"""
+👉 You need **€{needed_income:.0f} more per month** to break even
+👉 That’s about **€{weekly_gap:.0f} per week**
+""")
 
-st.markdown(f"[👉 Click here to give feedback]({form_url})")
-st.info("The form opens in a new tab. Please come back after submitting 🙏")
+    if savings > 0:
+        if months_survival < 1:
+            st.error("🚨 Critical: Less than 1 month left. Act immediately.")
+        elif months_survival < 3:
+            st.warning("⚠️ You have limited time. Focus on getting income now.")
+        else:
+            st.info("🟡 You have some buffer, but don’t wait too long.")
+
+    st.markdown("""
+### 📌 Action Plan:
+- Get at least **1 paying client this week**
+- Pause non-essential spending
+- Focus only on paid work (no free tasks)
+""")
+    
+else:
+    st.markdown("""
+### ✅ You are in a good position:
+- Keep saving consistently
+- Prepare for slow months
+- Invest in better clients or skills
+""")
+
+# ----- SUMMARY -----
+    st.divider()
+    st.subheader("🧠 Quick Summary")
+
+    if monthly_balance < 0:
+        st.error("You are currently at risk. Focus on increasing income immediately.")
+    else:
+        st.success("You are financially stable. Maintain and grow this position.")

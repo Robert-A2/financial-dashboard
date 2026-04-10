@@ -45,7 +45,7 @@ if st.button("Analyze my situation"):
    st.subheader("📊 Your Situation")
 
    # ----- SAFE TO SPEND -----
-   if monthly_balance >= 0:
+   if monthly_balance >= 10:
        st.success(f"🟢 You are stable. You can save about €{monthly_balance:.0f}/month.")
    else:
        st.error(f"🔴 You are losing €{abs(monthly_balance):.0f}/month.")

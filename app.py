@@ -38,7 +38,7 @@ if st.button("Analyze my situation"):
 
    df_expense = pd.DataFrame(expense_data)
    total_expense = df_expense["amount"].sum()
-   monthly_balance = income - total_expense
+   monthly_balance = income- total_expense
 
    st.divider()
    st.subheader("📊 Your Situation")

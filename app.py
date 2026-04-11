@@ -58,7 +58,7 @@ if st.button("Analyze my situation"):
            if months == 0:
                st.error(f"⏳ You will run out of money in {days} days.")
            elif days == 0:
-               st.error(f"⏳ You will run out of money in{months} manths")   
+               st.error(f"⏳ You will run out of money in{months} months")   
            else:
                st.error(f"⏳You will run out of money in {months} month and days.")
        else:
@@ -81,7 +81,7 @@ if st.button("Analyze my situation"):
 
        if savings > 0:
            if months_survival < 1:
-               st.error("🚨 This Is Critical: YOU have Less than 1 month left. Act immediately.")
+               st.error("🚨 This Is Critical: You have Less than 1 month left. Act immediately.")
            elif months_survival < 3:
                st.warning("⚠️ You have limited time. Focus on getting income now.")
            else:

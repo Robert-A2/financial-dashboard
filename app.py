@@ -5,7 +5,7 @@ st.set_page_config(page_title="Freelancer Survival Tool", layout="centered")
 
 st.title("💸 Freelancer Survival Tool")
 
-st.markdown("Understand your financial situation in seconds.")
+st.markdown("Understand your financial situation in few seconds.")
 
 # ----- INPUTS -----
 st.subheader("📥 Your Data")
@@ -25,10 +25,8 @@ for i in range(int(num_expenses)):
         name = st.text_input(f"Expense {i+1} name", key=f"name_{i}")
     with col2:
         amount = st.number_input(f"€", min_value=0.0, key=f"amount_{i}")
-
-if amount > 0:
-    expense_data.append({"name": name, "amount": amount})
-
+    if amount > 0:
+       expense_data.append({"name": name, "amount": amount})
 
 # ----- CALCULATION -----
 if st.button("Analyze my situation"):

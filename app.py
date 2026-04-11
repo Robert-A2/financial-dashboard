@@ -52,7 +52,9 @@ if st.button("Analyze my situation"):
    if monthly_balance < 0:
        if savings > 0:
            months_survival = savings / abs(monthly_balance)
-           st.error(f"⏳ You will run out of money in {months_survival:.1f} months.")
+           months = int(months_survival)
+           days = int((months_survival -months)* 30)
+           st.error(f"⏳ You will run out of money in {months} months and {days} days.")
        else:
            st.error("🚨 You have no savings and are losing money. Immediate action needed.")
    else:

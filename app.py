@@ -75,7 +75,7 @@ if st.button("Analyze my situation"):
        weekly_gap = needed_income / 4
 
        st.markdown(f"""
-👉 You need **€{needed_income:.0f} more per month** to break even
+👉 You need **€{needed_income:.0f} more per month** to break it. Even
 👉 That’s about **€{weekly_gap:.0f} per week**
 """)
 

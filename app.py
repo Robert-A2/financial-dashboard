@@ -53,7 +53,7 @@ if st.button("Analyze my situation"):
    # ----- SURVIVAL -----
    if monthly_balance < 0:
        if savings > 0:
-           months_survival = savings // abs(monthly_balance)
+           months_survival = savings / abs(monthly_balance)
            st.error(f"⏳ You will run out of money in {months_survival:.1f} months.")
        else:
            st.error("🚨 You have no savings and are losing money. Immediate action needed.")
@@ -66,7 +66,7 @@ if st.button("Analyze my situation"):
 
    if monthly_balance < 0:
        needed_income = abs(monthly_balance)
-       weekly_gap = needed_income // 4
+       weekly_gap = needed_income / 4
 
        st.markdown(f"""
 👉 You need **€{needed_income:.0f} more per month** to break even

@@ -54,7 +54,13 @@ if st.button("Analyze my situation"):
            months_survival = savings / abs(monthly_balance)
            months = int(months_survival)
            days = int((months_survival -months)* 30)
-           st.error(f"⏳ You will run out of money in {months} months and {days} days.")
+
+           if months == 0:
+               st.error(f"⏳ You will run out of money in {days} days.")
+           elif days == 0:
+               st.error(f"⏳ You will run out of money in{months} manths")   
+           else:
+               st.error(f"⏳You will run out of money in {months} month and days.")
        else:
            st.error("🚨 You have no savings and are losing money. Immediate action needed.")
    else:
@@ -75,7 +81,7 @@ if st.button("Analyze my situation"):
 
        if savings > 0:
            if months_survival < 1:
-               st.error("🚨 Critical: Less than 1 month left. Act immediately.")
+               st.error("🚨 This Is Critical: YOU have Less than 1 month left. Act immediately.")
            elif months_survival < 3:
                st.warning("⚠️ You have limited time. Focus on getting income now.")
            else:
@@ -103,4 +109,4 @@ if st.button("Analyze my situation"):
    if monthly_balance < 0:
        st.error("You are currently at risk. Focus on increasing income immediately.")
    else:
-       st.success("You are financially stable. Maintain and grow this position.")
+       st.success("You are financially stable. Maintain and grow this position continously.")

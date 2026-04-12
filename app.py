@@ -13,7 +13,7 @@ st.subheader("📥 Your Data")
 income = st.number_input(" Monthly Income (€)", min_value=0.0)
 savings = st.number_input("🏦 Current Savings (€)", min_value=0.0)
 
-st.markdown("### Expenses")
+st.markdown("### Put Expenses Here")
 
 expense_data = []
 

@@ -47,7 +47,7 @@ if st.button("Analyze my situation"):
        st.success(f"🟢 You are stable. You can save about €{monthly_balance:.0f} per month. Do pay more attention to that are you saving that amount? ")
    else:
        st.error(f"🔴 You are losing €{abs(monthly_balance):.0f} per month.")
-       st.error(f"🔴  This will creat some coinsicounse on your savings.")
+       st.error(f"🔴  This reduces your savings.")
    # ----- SURVIVAL -----
    if monthly_balance < 0:
        if savings > 0:
@@ -62,9 +62,9 @@ if st.button("Analyze my situation"):
            else:
                st.error(f"⏳You will run out of money in {months} month and days.")
        else:
-           st.error("🚨 You have no savings and are losing money. Immediate action needed.")
+           st.error("🚨 You have no savings and you are losing money. Immediate action needed.")
    else:
-       st.success("🟢 You are not at immediate risk.")
+       st.success("🟢 You are currently not at risk.")
 
    # ----- DECISION ENGINE -----
    st.divider()

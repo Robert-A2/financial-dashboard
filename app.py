@@ -43,7 +43,9 @@ if st.button("Analyze my situation"):
    st.subheader(" Your Current Situation")
 
    # ----- SAFE TO SPEND -----
-   if monthly_balance >= 10:
+   if income == 0:
+    if monthly_balance >= 10:
+       st.error("No income Found")
        st.success(f"🟢 You are stable. You can save about €{monthly_balance:.0f} per month. Do pay more attention to that are you saving that amount? ")
    else:
        st.error(f"🔴 You are losing €{abs(monthly_balance):.0f} per month.")

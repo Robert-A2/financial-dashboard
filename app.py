@@ -10,10 +10,10 @@ st.markdown("Understand your financial situation in few seconds.")
 # ----- INPUTS -----
 st.subheader("📥 Your Data")
 
-income = st.number_input("💰 Monthly Income (€)", min_value=0.0)
+income = st.number_input(" Monthly Income (€)", min_value=0.0)
 savings = st.number_input("🏦 Current Savings (€)", min_value=0.0)
 
-st.markdown("### 💸 Expenses")
+st.markdown("### Expenses")
 
 expense_data = []
 
@@ -40,13 +40,13 @@ if st.button("Analyze my situation"):
    monthly_balance = income - total_expense
 
    st.divider()
-   st.subheader("📊 Your Situation")
+   st.subheader(" Your Current Situation")
 
    # ----- SAFE TO SPEND -----
    if monthly_balance >= 10:
-       st.success(f"🟢 You are stable. You can save about €{monthly_balance:.0f}/month.")
+       st.success(f"🟢 You are stable. You can save about €{monthly_balance:.0f} per month. Do pay more attention to that are you saving that amount? ")
    else:
-       st.error(f"🔴 You are losing €{abs(monthly_balance):.0f}/month.")
+       st.error(f"🔴 You are losing €{abs(monthly_balance):.0f} per month. This will creat some coinsicounse on your savings")
 
    # ----- SURVIVAL -----
    if monthly_balance < 0:

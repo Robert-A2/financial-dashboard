@@ -46,8 +46,8 @@ if st.button("Analyze my situation"):
    if monthly_balance >= 10:
        st.success(f"🟢 You are stable. You can save about €{monthly_balance:.0f} per month. Do pay more attention to that are you saving that amount? ")
    else:
-       st.error(f"🔴 You are losing €{abs(monthly_balance):.0f} per month. This will creat some coinsicounse on your savings")
-
+       st.error(f"🔴 You are losing €{abs(monthly_balance):.0f} per month.")
+       st.error(f"🔴  This will creat some coinsicounse on your savings.")
    # ----- SURVIVAL -----
    if monthly_balance < 0:
        if savings > 0:
